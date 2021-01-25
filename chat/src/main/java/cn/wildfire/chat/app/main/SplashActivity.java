@@ -23,9 +23,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
 
 import butterknife.ButterKnife;
+import cn.wildfire.chat.app.login.LoginActivity;
 import cn.wildfire.chat.app.login.SMSLoginActivity;
 import cn.wildfirechat.chat.R;
 
@@ -43,6 +43,13 @@ public class SplashActivity extends AppCompatActivity {
     private String id;
     private String token;
 
+    private void hideStatusBar() {
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,8 +57,7 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        hideSystemUI();
-        setStatusBarColor(R.color.white);
+        hideStatusBar();
 
         sharedPreferences = getSharedPreferences("config", Context.MODE_PRIVATE);
         id = sharedPreferences.getString("id", null);
@@ -100,8 +106,6 @@ public class SplashActivity extends AppCompatActivity {
                     showNextScreen();
                 }
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -124,30 +128,11 @@ public class SplashActivity extends AppCompatActivity {
 
     private void showLogin() {
         Intent intent;
-        intent = new Intent(this, SMSLoginActivity.class);
+      //  intent = new Intent(this, SMSLoginActivity.class);
+        intent = new Intent(this, LoginActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getContext(),
             android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
         startActivity(intent, bundle);
         finish();
-    }
-
-    private void hideSystemUI() {
-        // Set the IMMERSIVE flag.
-        // Set the content to appear under the system bars so that the content
-        // doesn't resize when the system bars hide and show.
-        View mDecorView = getWindow().getDecorView();
-        mDecorView.setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                | View.SYSTEM_UI_FLAG_IMMERSIVE);
-    }
-
-    protected void setStatusBarColor(int resId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, resId));
-        }
     }
 }

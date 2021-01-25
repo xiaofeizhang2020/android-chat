@@ -88,12 +88,14 @@ dependencies {
     implementation project(':imagepicker')
 
     api 'com.king.zxing:zxing-lite:1.1.1'
-    api 'com.blankj:utilcodex:1.30.5'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android:flexbox:2.0.1'
 
     implementation 'com.tencent.map.geolocation:TencentLocationSdk-openplatform:7.2.6'
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation 'com.alibaba:fastjson:1.2.68'
 
     // kit wfc end
 

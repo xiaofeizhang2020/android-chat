@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.text.Editable;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,9 +27,6 @@ import cn.wildfire.chat.kit.WfcBaseNoToolbarActivity;
 import cn.wildfirechat.chat.R;
 
 public class SMSLoginActivity extends WfcBaseNoToolbarActivity {
-
-    private static final String TAG = "SMSLoginActivity";
-
     @BindView(R.id.loginButton)
     Button loginButton;
     @BindView(R.id.phoneNumberEditText)
@@ -42,8 +38,6 @@ public class SMSLoginActivity extends WfcBaseNoToolbarActivity {
 
     private String phoneNumber;
 
-
-
     @Override
     protected int contentLayout() {
         return R.layout.login_activity_sms;
@@ -52,7 +46,7 @@ public class SMSLoginActivity extends WfcBaseNoToolbarActivity {
     @Override
     protected void afterViews() {
         setStatusBarTheme(this, false);
-        setStatusBarColor(R.color.gray14);
+        setStatusBarColor(R.color.white);
     }
 
     @OnTextChanged(value = R.id.phoneNumberEditText, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -72,8 +66,6 @@ public class SMSLoginActivity extends WfcBaseNoToolbarActivity {
             loginButton.setEnabled(true);
         }
     }
-
-
 
     @OnClick(R.id.loginButton)
     void login() {

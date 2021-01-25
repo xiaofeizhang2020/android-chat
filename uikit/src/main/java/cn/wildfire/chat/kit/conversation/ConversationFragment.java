@@ -213,7 +213,12 @@ public class ConversationFragment extends Fragment implements
     };
 
     private boolean isDisplayableMessage(UiMessage uiMessage) {
-        return uiMessage.message.messageId != 0;
+        MessageContent content = uiMessage.message.content;
+        if (content.getPersistFlag() == PersistFlag.Persist
+            || content.getPersistFlag() == PersistFlag.Persist_And_Count) {
+            return true;
+        }
+        return false;
     }
 
     private Observer<Map<String, String>> mediaUploadedLiveDataObserver = new Observer<Map<String, String>>() {

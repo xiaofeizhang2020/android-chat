@@ -4,7 +4,6 @@
 
 package cn.wildfirechat.message;
 
-import android.media.MediaScannerConnection;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -32,7 +31,6 @@ public abstract class MessageContent implements Parcelable {
     //一定要用json，保留未来的可扩展性
     public String extra;
     public String pushContent;
-
 
     final public int getMessageContentType() {
         ContentTag tag = getClass().getAnnotation(ContentTag.class);

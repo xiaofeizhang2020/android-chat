@@ -37,6 +37,7 @@ import cn.wildfirechat.chat.BuildConfig;
 import cn.wildfirechat.model.Conversation;
 import cn.wildfirechat.remote.ChatManager;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 
 public class AppService implements AppServiceProvider {
     private static AppService Instance = new AppService();
@@ -49,7 +50,9 @@ public class AppService implements AppServiceProvider {
      * <br>
      * <br>
      */
-    public static String APP_SERVER_ADDRESS/*请仔细阅读上面的注释*/ = "http://wildfirechat.cn:8888";
+    //public static String APP_SERVER_ADDRESS/*请仔细阅读上面的注释*/ = "http://wildfirechat.cn:8888";
+   // public static String APP_SERVER_ADDRESS/*请仔细阅读上面的注释*/ = "http://192.168.0.105:8888";
+    public static String APP_SERVER_ADDRESS/*请仔细阅读上面的注释*/ = "http://18.179.245.210:8888";
 
     private AppService() {
 
@@ -94,6 +97,25 @@ public class AppService implements AppServiceProvider {
         });
     }
 
+    public void useRegister(String account, String password,String code, SimpleCallback callback) {
+
+        String url = APP_SERVER_ADDRESS + "/register";
+        Map<String, Object> params = new HashMap<>();
+        params.put("mobile", account);
+        params.put("password", password);
+        params.put("code", code);
+
+        try {
+            params.put("clientId", ChatManagerHolder.gChatManager.getClientId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.onUiFailure(-1, "网络出来问题了。。。");
+            return;
+        }
+      //  OKHttpHelper.post(url,params,n);
+
+        OKHttpHelper.post(url, params,callback);
+    }
     public void smsLogin(String phoneNumber, String authCode, LoginCallback callback) {
 
         String url = APP_SERVER_ADDRESS + "/login";
@@ -130,8 +152,6 @@ public class AppService implements AppServiceProvider {
             }
         });
     }
-
-
 
     public interface SendCodeCallback {
         void onUiSuccess();

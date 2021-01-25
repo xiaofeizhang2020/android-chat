@@ -36,6 +36,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 
 /**
@@ -43,51 +44,96 @@ import okhttp3.Response;
  */
 
 public class OKHttpHelper {
-    private static final String TAG = "OKHttpHelper";
     private static final String WFC_OKHTTP_COOKIE_CONFIG = "WFC_OK_HTTP_COOKIES";
     private static final Map<String, List<Cookie>> cookieStore = new ConcurrentHashMap<>();
 
     private static WeakReference<Context>  AppContext;
+    private static OkHttpClient okHttpClient;
     public static void init(Context context) {
         AppContext = new WeakReference<>(context);
-    }
-    private static OkHttpClient okHttpClient = new OkHttpClient.Builder()
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .cookieJar(new CookieJar() {
-                @Override
-                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                    cookieStore.put(url.host(), cookies);
-                    if (AppContext != null && AppContext.get() != null) {
-                        SharedPreferences sp = AppContext.get().getSharedPreferences(WFC_OKHTTP_COOKIE_CONFIG, 0);
-                        Set<String>  set = new HashSet<>();
-                        for (Cookie k:cookies) {
-                            set.add(gson.toJson(k));
-                        }
-                        sp.edit().putStringSet(url.host(), set).apply();
-                    }
-                }
-
-                @Override
-                public List<Cookie> loadForRequest(HttpUrl url) {
-                    List<Cookie> cookies = cookieStore.get(url.host());
-                    if (cookies == null) {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Log.i("httpRequestInfo---",message);
+            }
+        });
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .cookieJar(new CookieJar() {
+                    @Override
+                    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                        cookieStore.put(url.host(), cookies);
                         if (AppContext != null && AppContext.get() != null) {
                             SharedPreferences sp = AppContext.get().getSharedPreferences(WFC_OKHTTP_COOKIE_CONFIG, 0);
-                            Set<String>  set = sp.getStringSet(url.host(), new HashSet<>());
-                            cookies = new ArrayList<>();
-                            for (String s:set) {
-                                Cookie cookie = gson.fromJson(s, Cookie.class);
-                                cookies.add(cookie);
+                            Set<String>  set = new HashSet<>();
+                            for (Cookie k:cookies) {
+                                set.add(gson.toJson(k));
                             }
-                            cookieStore.put(url.host(), cookies);
+                            sp.edit().putStringSet(url.host(), set).apply();
                         }
                     }
 
-                    return cookies;
-                }
-            })
-            .build();
+                    @Override
+                    public List<Cookie> loadForRequest(HttpUrl url) {
+                        List<Cookie> cookies = cookieStore.get(url.host());
+                        if (cookies == null) {
+                            if (AppContext != null && AppContext.get() != null) {
+                                SharedPreferences sp = AppContext.get().getSharedPreferences(WFC_OKHTTP_COOKIE_CONFIG, 0);
+                                Set<String>  set = sp.getStringSet(url.host(), new HashSet<>());
+                                cookies = new ArrayList<>();
+                                for (String s:set) {
+                                    Cookie cookie = gson.fromJson(s, Cookie.class);
+                                    cookies.add(cookie);
+                                }
+                                cookieStore.put(url.host(), cookies);
+                            }
+                        }
+
+                        return cookies;
+                    }
+                }).addInterceptor(interceptor)
+                .build();
+    }
+
+//    private static OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//            .readTimeout(30, TimeUnit.SECONDS)
+//            .writeTimeout(30, TimeUnit.SECONDS)
+//            .cookieJar(new CookieJar() {
+//                @Override
+//                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+//                    cookieStore.put(url.host(), cookies);
+//                    if (AppContext != null && AppContext.get() != null) {
+//                        SharedPreferences sp = AppContext.get().getSharedPreferences(WFC_OKHTTP_COOKIE_CONFIG, 0);
+//                        Set<String>  set = new HashSet<>();
+//                        for (Cookie k:cookies) {
+//                            set.add(gson.toJson(k));
+//                        }
+//                        sp.edit().putStringSet(url.host(), set).apply();
+//                    }
+//                }
+//
+//                @Override
+//                public List<Cookie> loadForRequest(HttpUrl url) {
+//                    List<Cookie> cookies = cookieStore.get(url.host());
+//                    if (cookies == null) {
+//                        if (AppContext != null && AppContext.get() != null) {
+//                            SharedPreferences sp = AppContext.get().getSharedPreferences(WFC_OKHTTP_COOKIE_CONFIG, 0);
+//                            Set<String>  set = sp.getStringSet(url.host(), new HashSet<>());
+//                            cookies = new ArrayList<>();
+//                            for (String s:set) {
+//                                Cookie cookie = gson.fromJson(s, Cookie.class);
+//                                cookies.add(cookie);
+//                            }
+//                            cookieStore.put(url.host(), cookies);
+//                        }
+//                    }
+//
+//                    return cookies;
+//                }
+//            })
+//            .build();
 
     private static Gson gson = new Gson();
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -117,7 +163,6 @@ public class OKHttpHelper {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.e(TAG,"response="+response.toString());
                 handleResponse(url, call, response, callback);
             }
         });

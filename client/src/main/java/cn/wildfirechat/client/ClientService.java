@@ -258,18 +258,6 @@ public class ClientService extends Service implements SdtLogic.ICallBack,
         }
 
         @Override
-        public void setBackupAddressStrategy(int strategy) throws RemoteException {
-            ProtoLogic.setBackupAddressStrategy(strategy);
-        }
-
-        @Override
-        public void setBackupAddress(String host, int port) throws RemoteException {
-            if (!TextUtils.isEmpty(host)) {
-                ProtoLogic.setBackupAddress(host, port);
-            }
-        }
-
-        @Override
         public void registerMessageContent(String msgContentCls) throws RemoteException {
             try {
                 Class cls = Class.forName(msgContentCls);
@@ -795,10 +783,6 @@ public class ClientService extends Service implements SdtLogic.ICallBack,
 
         @Override
         public void setConversationDraft(int conversationType, String target, int line, String draft) throws RemoteException {
-            ConversationInfo conversationInfo = getConversation(conversationType, target, line);
-            if((TextUtils.isEmpty(conversationInfo.draft)  && TextUtils.isEmpty(draft)) || TextUtils.equals(conversationInfo.draft, draft)){
-                return;
-            }
             ProtoLogic.setConversationDraft(conversationType, target, line, draft);
         }
 
@@ -2147,7 +2131,7 @@ public class ClientService extends Service implements SdtLogic.ICallBack,
         channelInfo.portrait = protoChannelInfo.getPortrait();
         channelInfo.extra = protoChannelInfo.getExtra();
         channelInfo.owner = protoChannelInfo.getOwner();
-        channelInfo.status = protoChannelInfo.getStatus();
+        channelInfo.status = ChannelInfo.ChannelStatus.status(protoChannelInfo.getStatus());
         channelInfo.updateDt = protoChannelInfo.getUpdateDt();
 
         return channelInfo;
@@ -2868,7 +2852,7 @@ public class ClientService extends Service implements SdtLogic.ICallBack,
         //conversation
         length += 4 + message.getTarget().length() + 4;
         // tos
-        if (message.getTos() != null) {
+        if(message.getTos() != null){
             for (int i = 0; i < message.getTos().length; i++) {
                 length += message.getTos()[i].length();
             }

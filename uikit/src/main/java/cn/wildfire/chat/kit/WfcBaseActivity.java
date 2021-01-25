@@ -31,6 +31,14 @@ import cn.wildfire.chat.kit.R;
 import cn.wildfire.chat.kit.R2;
 
 public abstract class WfcBaseActivity extends AppCompatActivity {
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
+    public void setToolbar(Toolbar toolbar) {
+        this.toolbar = toolbar;
+    }
+
     @BindView(R2.id.toolbar)
     Toolbar toolbar;
 
@@ -64,8 +72,10 @@ public abstract class WfcBaseActivity extends AppCompatActivity {
         if (darkTheme) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTint(Color.WHITE);
+              //  drawable.setTint(Color.BLACK);
             }
             toolbar.setTitleTextColor(Color.WHITE);
+           // toolbar.setTitleTextColor(Color.BLACK);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable.setTintList(null);
@@ -87,6 +97,7 @@ public abstract class WfcBaseActivity extends AppCompatActivity {
         toolbar.setBackgroundResource(resId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, resId));
+          //  getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.mainTextColor));
         }
         setStatusBarTheme(this, dark);
     }

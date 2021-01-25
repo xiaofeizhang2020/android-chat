@@ -170,10 +170,6 @@ public class ChatManager {
     private int receiptStatus = -1; // 1, enable
     private int userReceiptStatus = -1; //1, enable
 
-    private int backupAddressStrategy = 1;
-    private String backupAddressHost = null;
-    private int backupAddressPort = 80;
-
     private boolean isBackground = true;
     private List<OnReceiveMessageListener> onReceiveMessageListeners = new ArrayList<>();
     private List<OnConnectionStatusChangeListener> onConnectionStatusChangeListeners = new ArrayList<>();
@@ -321,7 +317,7 @@ public class ChatManager {
     }
 
     /**
-     * 当有自己的用户账号体系，不想使用野火IM提供的用户信息托管服务时，调用此方法设置用户信息源
+     * 当有自己的用户账号体系，不想使用叨叨IM提供的用户信息托管服务时，调用此方法设置用户信息源
      *
      * @param userSource 用户信息源
      */
@@ -743,7 +739,7 @@ public class ChatManager {
     }
 
     /**
-     * 获取clientId, 野火IM用clientId唯一表示用户设备
+     * 获取clientId, 叨叨IM用clientId唯一表示用户设备
      */
     public synchronized String getClientId() {
         if (this.clientId != null) {
@@ -786,7 +782,7 @@ public class ChatManager {
     /**
      * 创建频道
      *
-     * @param channelId       频道id，如果传null，野火会自动生成id；否则，使用用户提供的id，需要保证此id的唯一性
+     * @param channelId       频道id，如果传null，叨叨会自动生成id；否则，使用用户提供的id，需要保证此id的唯一性
      * @param channelName     频道名称
      * @param channelPortrait 频道头像的网络地址
      * @param desc            频道描述
@@ -1331,13 +1327,12 @@ public class ChatManager {
             throw new IllegalArgumentException(className + ", custom messageContent class must have a default constructor，自定义消息必须要有一个默认的无参构造函数，请参考TextMessageContent.java");
         }
 
-        // 建议打开，以便对自定义消息的合法性进行检查
-//        try {
-//            msgContentClazz.getDeclaredMethod("encode");
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//            throw new IllegalArgumentException(className + ", custom messageContent class must override encode，自定义消息必须覆盖encode方法，并调用super.encode()，请参考TextMessageContent.java");
-//        }
+        try {
+            msgContentClazz.getDeclaredMethod("encode");
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(className + ", custom messageContent class must override encode，自定义消息必须覆盖encode方法，并调用super.encode()，请参考TextMessageContent.java");
+        }
 
         try {
             Field creator = msgContentClazz.getDeclaredField("CREATOR");
@@ -1399,22 +1394,6 @@ public class ChatManager {
      * @return
      */
     public Message insertMessage(Conversation conversation, String sender, MessageContent content, MessageStatus status, boolean notify, long serverTime) {
-        return insertMessage(conversation, sender, 0, content, status, notify, serverTime);
-    }
-
-    /**
-     * 插入消息
-     *
-     * @param conversation 目标会话
-     * @param sender       消息发送者id
-     * @param messageUid   消息uid，可以传0
-     * @param content      消息体
-     * @param status       消息状态
-     * @param notify       是否通知界面，通知时，会通过{@link #onReceiveMessage(List, boolean)}通知界面
-     * @param serverTime   服务器时间
-     * @return
-     */
-    public Message insertMessage(Conversation conversation, String sender, long messageUid, MessageContent content, MessageStatus status, boolean notify, long serverTime) {
         if (!checkRemoteService()) {
             return null;
         }
@@ -1424,7 +1403,6 @@ public class ChatManager {
         message.content = content;
         message.sender = sender;
         message.status = status;
-        message.messageUid = messageUid;
         message.serverTime = serverTime;
         if (this.userId.equals(sender)) {
             message.direction = MessageDirection.Send;
@@ -1434,9 +1412,6 @@ public class ChatManager {
 
         try {
             message = mClient.insertMessage(message, notify);
-            if (notify) {
-                onReceiveMessage(Collections.singletonList(message), false);
-            }
         } catch (RemoteException e) {
             e.printStackTrace();
             return null;
@@ -1558,46 +1533,6 @@ public class ChatManager {
             }
             this.userId = null;
             this.token = null;
-        }
-    }
-
-    /**
-     * 设置备选服务地址，仅专业版支持，一般用于政企单位内外网两种网络环境。
-     *
-     * @param strategy 网络策略，0是复合连接；1是使用主要网络；2使用备选网络
-     */
-    public void setBackupAddressStrategy(int strategy) {
-        backupAddressStrategy = strategy;
-
-        if (!checkRemoteService()) {
-            return;
-        }
-
-        try {
-            mClient.setBackupAddressStrategy(strategy);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 设置备选服务地址，仅专业版支持，一般用于政企单位内外网两种网络环境。
-     *
-     * @param host 用备选网络ip
-     * @param port 用备选网络端口
-     */
-    public void setBackupAddress(String host, int port) {
-        backupAddressHost = host;
-        backupAddressPort = port;
-
-        if (!checkRemoteService()) {
-            return;
-        }
-
-        try {
-            mClient.setBackupAddress(host, port);
-        } catch (RemoteException e) {
-            e.printStackTrace();
         }
     }
 
@@ -2297,7 +2232,6 @@ public class ChatManager {
             mainHandler.post(() -> callback.onFail(ErrorCode.SERVICE_EXCEPTION));
         }
     }
-
     /**
      * 获取会话消息
      *
@@ -5914,7 +5848,6 @@ public class ChatManager {
             if (content instanceof CompositeMessageContent) {
                 ((CompositeMessageContent) content).decode(payload, this);
             } else {
-                Log.e(TAG,"decode");
                 content.decode(payload);
             }
             if (content instanceof NotificationMessageContent) {
@@ -5984,10 +5917,6 @@ public class ChatManager {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mClient = IRemoteClient.Stub.asInterface(iBinder);
             try {
-                mClient.setBackupAddressStrategy(backupAddressStrategy);
-                if (!TextUtils.isEmpty(backupAddressHost))
-                    mClient.setBackupAddress(backupAddressHost, backupAddressPort);
-
                 mClient.setServerAddress(SERVER_HOST);
                 for (Class clazz : messageContentMap.values()) {
                     mClient.registerMessageContent(clazz.getName());

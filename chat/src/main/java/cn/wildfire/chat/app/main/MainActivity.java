@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -128,7 +129,7 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
         IMConnectionStatusViewModel connectionStatusViewModel = ViewModelProviders.of(this).get(IMConnectionStatusViewModel.class);
         connectionStatusViewModel.connectionStatusLiveData().observe(this, status -> {
             if (status == ConnectionStatus.ConnectionStatusTokenIncorrect || status == ConnectionStatus.ConnectionStatusSecretKeyMismatch || status == ConnectionStatus.ConnectionStatusRejected || status == ConnectionStatus.ConnectionStatusLogout) {
-                ChatManager.Instance().disconnect(true, false);
+                ChatManager.Instance().disconnect(true, true);
                 reLogin();
             }
         });
@@ -185,8 +186,10 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
         if (unreadMessageUnreadBadgeView == null) {
             BottomNavigationMenuView bottomNavigationMenuView = ((BottomNavigationMenuView) bottomNavigationView.getChildAt(0));
             View view = bottomNavigationMenuView.getChildAt(0);
+
             unreadMessageUnreadBadgeView = new QBadgeView(MainActivity.this);
             unreadMessageUnreadBadgeView.bindTarget(view);
+            unreadMessageUnreadBadgeView.setGravityOffset(20,3,true);
         }
         unreadMessageUnreadBadgeView.setBadgeNumber(count);
     }
@@ -225,6 +228,8 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
             BottomNavigationMenuView bottomNavigationMenuView = ((BottomNavigationMenuView) bottomNavigationView.getChildAt(0));
             View view = bottomNavigationMenuView.getChildAt(1);
             unreadFriendRequestBadgeView = new QBadgeView(MainActivity.this);
+            unreadFriendRequestBadgeView.setGravityOffset(20,3,true);
+
             unreadFriendRequestBadgeView.bindTarget(view);
         }
         unreadFriendRequestBadgeView.setBadgeNumber(count);
@@ -242,6 +247,7 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
         return R.menu.main;
     }
 
+
     @Override
     protected boolean showHomeMenuItem() {
         return false;
@@ -253,7 +259,7 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
     }
 
     private void initView() {
-        setTitle(getString(R.string.app_name));
+        setTitle("消息");
 
         startingTextView.setVisibility(View.GONE);
         contentLinearLayout.setVisibility(View.VISIBLE);
@@ -275,28 +281,29 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.conversation_list:
-                    contentViewPager.setCurrentItem(0,false);
-                    setTitle("野火");
+                    contentViewPager.setCurrentItem(0);
+                    setTitle("消息");
                     if (!isDarkTheme()) {
                         setTitleBackgroundResource(R.color.gray5, false);
                     }
                     break;
                 case R.id.contact:
-                    contentViewPager.setCurrentItem(1,false);
+                    contentViewPager.setCurrentItem(1);
                     setTitle("通讯录");
                     if (!isDarkTheme()) {
                         setTitleBackgroundResource(R.color.gray5, false);
                     }
+                    //setTitleBackgroundResource(R.mipmap.icon_top_bg, false);
                     break;
                 case R.id.discovery:
-                    contentViewPager.setCurrentItem(2,false);
+                    contentViewPager.setCurrentItem(2);
                     setTitle("发现");
                     if (!isDarkTheme()) {
                         setTitleBackgroundResource(R.color.gray5, false);
                     }
                     break;
                 case R.id.me:
-                    contentViewPager.setCurrentItem(3,false);
+                    contentViewPager.setCurrentItem(3);
                     setTitle("我的");
                     if (!isDarkTheme()) {
                         setTitleBackgroundResource(R.color.white, false);
@@ -397,7 +404,7 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
                 break;
             case REQUEST_IGNORE_BATTERY_CODE:
                 if (resultCode == RESULT_CANCELED) {
-                    Toast.makeText(this, "允许野火IM后台运行，更能保证消息的实时性", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "允许叨叨IM后台运行，更能保证消息的实时性", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:

@@ -96,7 +96,7 @@ public class MeFragment extends Fragment {
             .apply(options)
             .into(portraitImageView);
         nameTextView.setText(userInfo.displayName);
-        accountTextView.setText("账号: " + userInfo.name);
+        accountTextView.setText( userInfo.name+"");
     }
 
     private void init() {
@@ -127,6 +127,12 @@ public class MeFragment extends Fragment {
     @OnClick(R.id.favOptionItemView)
     void fav() {
         Intent intent = new Intent(getActivity(), FavoriteListActivity.class);
+        startActivity(intent);
+    }
+    @OnClick(R.id.passwordOptionItemView)
+    void accountClick() {
+        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+        intent.putExtra("userInfo", userInfo);
         startActivity(intent);
     }
 

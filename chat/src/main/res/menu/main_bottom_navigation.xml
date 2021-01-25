@@ -5,7 +5,10 @@
     <item
         android:id="@+id/conversation_list"
         android:icon="@drawable/bottom_conversation_menu_selector"
-        android:title="野火"
+        android:title="消息"
+        android:contentDescription=""
+        android:titleCondensed=""
+        android:tooltipText=""
         app:showAsAction="never" />
     <item
         android:id="@+id/contact"
@@ -14,6 +17,7 @@
     <item
         android:id="@+id/discovery"
         android:icon="@drawable/bottom_discovery_menu_selector"
+        android:visible="false"
         android:title="发现" />
     <item
         android:id="@+id/me"

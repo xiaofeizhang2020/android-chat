@@ -73,7 +73,8 @@ public class ConversationListFragment extends ProgressFragment {
 
     private void init() {
         adapter = new ConversationListAdapter(this);
-        conversationListViewModel = new ViewModelProvider(this, new ConversationListViewModelFactory(types, lines))
+        conversationListViewModel = ViewModelProviders
+            .of(getActivity(), new ConversationListViewModelFactory(types, lines))
             .get(ConversationListViewModel.class);
         conversationListViewModel.conversationListLiveData().observe(this, conversationInfos -> {
             showContent();

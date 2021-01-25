@@ -19,7 +19,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="取消"
-        android:textColor="@color/blue3"
+        android:textColor="@color/mainTextColor"
         android:textSize="15sp" />
 
 </LinearLayout>

@@ -23,7 +23,9 @@ public class Config {
      * <br>
      * <br>
      */
-    public static String IM_SERVER_HOST /*请仔细阅读上面的注释*/ = "wildfirechat.cn";
+    //public static String IM_SERVER_HOST /*请仔细阅读上面的注释*/ = "wildfirechat.cn";
+   // public static String IM_SERVER_HOST /*请仔细阅读上面的注释*/ = "192.168.0.105";
+    public static String IM_SERVER_HOST /*请仔细阅读上面的注释*/ = "18.179.245.210";
 
     // 注意APP_SERVER_ADDRESS已从kit中移除，移动到了AppService.java中
     //public static String APP_SERVER_ADDRESS = "http://wildfirechat.cn:8888";

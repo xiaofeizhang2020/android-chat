@@ -50,10 +50,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:singleLine="true"
-                android:text="@string/my_chat_account"
+                android:text=""
                 android:textColor="@color/gray2"
                 android:textSize="13sp"
-                android:visibility="gone" />
+                />
 
         </LinearLayout>
 
@@ -93,7 +93,7 @@
         android:background="@drawable/selector_common_item"
         app:divider_align_to_title="true"
         app:show_arrow_indicator="true"
-        app:start_src="@mipmap/ic_star"
+        app:start_src="@mipmap/ic_collect"
         app:title="收藏" />
 
     <cn.wildfire.chat.kit.widget.OptionItemView
@@ -104,6 +104,7 @@
         app:divider_align_to_title="true"
         app:show_arrow_indicator="true"
         app:start_src="@mipmap/ic_theme"
+        android:visibility="gone"
         app:title="主题" />
 
     <cn.wildfire.chat.kit.widget.OptionItemView

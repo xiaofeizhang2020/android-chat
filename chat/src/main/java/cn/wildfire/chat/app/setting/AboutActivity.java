@@ -31,14 +31,15 @@ public class AboutActivity extends WfcBaseActivity {
         PackageManager packageManager = getPackageManager();
         try {
             PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), PackageManager.GET_CONFIGURATIONS);
-            String info = packageInfo.packageName + "\n"
-                + packageInfo.versionCode + " " + packageInfo.versionName + "\n"
-                + Config.IM_SERVER_HOST + "\n"
-                + AppService.APP_SERVER_ADDRESS + "\n";
-
-            for (String[] ice : Config.ICE_SERVERS) {
-                info += ice[0] + " " + ice[1] + " " + ice[2] + "\n";
-            }
+//            String info = packageInfo.packageName + "\n"
+//                + packageInfo.versionCode + " " + packageInfo.versionName + "\n"
+//                + Config.IM_SERVER_HOST + "\n"
+//                + AppService.APP_SERVER_ADDRESS + "\n";
+//
+//            for (String[] ice : Config.ICE_SERVERS) {
+//                info += ice[0] + " " + ice[1] + " " + ice[2] + "\n";
+//            }
+            String info = "版本号："+packageInfo.versionName;
             infoTextView.setText(info);
 
         } catch (PackageManager.NameNotFoundException e) {
@@ -48,16 +49,16 @@ public class AboutActivity extends WfcBaseActivity {
 
     @OnClick(R.id.introOptionItemView)
     public void intro() {
-        WfcWebViewActivity.loadUrl(this, "野火IM功能介绍", "http://docs.wildfirechat.cn/");
+        WfcWebViewActivity.loadUrl(this, "叨叨IM功能介绍", "http://docs.wildfirechat.cn/");
     }
 
     @OnClick(R.id.agreementOptionItemView)
     public void agreement() {
-        WfcWebViewActivity.loadUrl(this, "野火IM用户协议", "http://www.wildfirechat.cn/firechat_user_agreement.html");
+        WfcWebViewActivity.loadUrl(this, "叨叨IM用户协议", "http://www.wildfirechat.cn/firechat_user_agreement.html");
     }
 
     @OnClick(R.id.privacyOptionItemView)
     public void privacy() {
-        WfcWebViewActivity.loadUrl(this, "野火IM个人信息保护政策", "http://www.wildfirechat.cn/firechat_user_privacy.html");
+        WfcWebViewActivity.loadUrl(this, "叨叨IM个人信息保护政策", "http://www.wildfirechat.cn/firechat_user_privacy.html");
     }
 }

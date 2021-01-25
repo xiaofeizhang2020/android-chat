@@ -42,6 +42,7 @@
             android:background="@drawable/selector_common_item"
             android:clickable="true"
             app:show_arrow_indicator="true"
+            android:visibility="gone"
             app:title="诊断" />
 
         <cn.wildfire.chat.kit.widget.OptionItemView
@@ -50,6 +51,7 @@
             android:background="@drawable/selector_common_item"
             android:clickable="true"
             app:show_arrow_indicator="true"
+            android:visibility="gone"
             app:title="上传日志" />
     </LinearLayout>
 

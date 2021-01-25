@@ -48,9 +48,22 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:resizeableActivity="true"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+
+        <meta-data
+            android:name="design_width"
+            android:value="720" />
+        <meta-data
+            android:name="design_height"
+            android:value="1280" />
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
 
         <meta-data
             android:name="android.webkit.WebView.EnableSafeBrowsing"
@@ -75,6 +88,9 @@
             android:name="cn.wildfire.chat.app.login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="cn.wildfire.chat.app.login.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="cn.wildfire.chat.app.setting.SettingActivity"
             android:label="设置"
             android:screenOrientation="portrait" />
@@ -85,7 +101,7 @@
 
         <activity
             android:name="cn.wildfire.chat.app.main.MainActivity"
-            android:label="野火IM"
+            android:label="叨叨IM"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="${applicationId}.main" />

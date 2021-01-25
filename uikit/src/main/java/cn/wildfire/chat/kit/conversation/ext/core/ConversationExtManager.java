@@ -39,8 +39,8 @@ public class ConversationExtManager {
         registerExt(ShootExt.class);
         registerExt(FileExt.class);
         registerExt(LocationExt.class);
-        registerExt(ExampleAudioInputExt.class);
-        registerExt(UserCardExt.class);
+    //    registerExt(ExampleAudioInputExt.class);
+      //  registerExt(UserCardExt.class);
     }
 
     public void registerExt(Class<? extends ConversationExt> clazz) {

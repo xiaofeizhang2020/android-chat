@@ -72,7 +72,7 @@ public abstract class ConversationViewHolder extends RecyclerView.ViewHolder {
         this.adapter = adapter;
         ButterKnife.bind(this, itemView);
         conversationListViewModel = ViewModelProviders
-            .of(fragment, new ConversationListViewModelFactory(Arrays.asList(Conversation.ConversationType.Single, Conversation.ConversationType.Group), Arrays.asList(0)))
+            .of(fragment.getActivity(), new ConversationListViewModelFactory(Arrays.asList(Conversation.ConversationType.Single, Conversation.ConversationType.Group), Arrays.asList(0)))
             .get(ConversationListViewModel.class);
     }
 
@@ -128,8 +128,9 @@ public abstract class ConversationViewHolder extends RecyclerView.ViewHolder {
             } else {
                 promptTextView.setVisibility(View.GONE);
             }
-            setViewVisibility(R.id.contentTextView, View.VISIBLE);
+
             if (conversationInfo.lastMessage != null && conversationInfo.lastMessage.content != null) {
+                setViewVisibility(R.id.contentTextView, View.VISIBLE);
                 String content = "";
                 Message lastMessage = conversationInfo.lastMessage;
                 // the message maybe invalid
@@ -165,7 +166,9 @@ public abstract class ConversationViewHolder extends RecyclerView.ViewHolder {
                 }
 
             } else {
+                setViewVisibility(R.id.contentTextView, View.GONE);
                 contentTextView.setText("");
+
             }
         }
     }
