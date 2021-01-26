@@ -180,6 +180,29 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
         if (checkDisplayName()) {
             ignoreBatteryOption();
         }
+        try {
+//            bottomNavigationView.getChildAt(0).findViewById(R.id.conversation_list).setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    return true;
+//                }
+//            });
+//            bottomNavigationView.getChildAt(0).findViewById(R.id.contact).setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    return true;
+//                }
+//            });
+//            bottomNavigationView.getChildAt(0).findViewById(R.id.me).setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    return true;
+//                }
+//            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void showUnreadMessageBadgeView(int count) {
@@ -221,6 +244,8 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
                 discoveryBadgeView = null;
             }
         }
+
+
     }
 
     private void showUnreadFriendRequestBadgeView(int count) {
@@ -277,6 +302,7 @@ public class MainActivity extends WfcBaseActivity implements ViewPager.OnPageCha
         mFragmentList.add(meFragment);
         contentViewPager.setAdapter(new HomeFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList));
         contentViewPager.setOnPageChangeListener(this);
+
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {

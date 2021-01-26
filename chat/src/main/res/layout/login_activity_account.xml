@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
 
-            android:text="账号密码登录"
+            android:text="用户密码登录"
             android:layout_marginTop="10dp"
             android:visibility="gone"
             android:textColor="@color/black"
@@ -59,6 +59,7 @@
             android:focusableInTouchMode="true"
             android:gravity="center_vertical"
             android:hint="请输入密码"
+            android:inputType="textPassword"
             android:drawableLeft="@drawable/icon_login_pwd"
             android:drawablePadding="5dp"
             android:maxLines="1"

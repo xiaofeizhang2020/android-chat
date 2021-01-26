@@ -6,9 +6,6 @@
         android:id="@+id/conversation_list"
         android:icon="@drawable/bottom_conversation_menu_selector"
         android:title="消息"
-        android:contentDescription=""
-        android:titleCondensed=""
-        android:tooltipText=""
         app:showAsAction="never" />
     <item
         android:id="@+id/contact"
